@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATO Case Review Checklist</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0f3557;--navy-mid:#1a4a73;
+  --blue:#006fba;--blue-lt:#e6f2fb;
+  --green:#1a7a4a;--green-lt:#e6f5ed;
+  --amber:#b35c00;--amber-lt:#fff4e0;
+  --red:#c0392b;--red-lt:#fdecea;
+  --gray-50:#f8f9fb;--gray-100:#f1f3f5;--gray-200:#e2e6ea;
+  --gray-400:#9aa3ad;--gray-600:#5a6472;--gray-900:#1a202c;
+  --font:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif;
+  --mono:'SF Mono','Fira Code','Consolas',monospace;
+  --r:8px;--shadow:0 1px 4px rgba(0,0,0,.10);
+}
+body{font-family:var(--font);font-size:14px;color:var(--gray-900);background:var(--gray-100);line-height:1.55;min-height:100vh}
+
+/* HEADER */
+.hdr{background:var(--navy);color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.hdr h1{font-size:16px;font-weight:600;letter-spacing:-.01em}
+.hdr-sub{font-size:11px;opacity:.65;margin-top:1px}
+.hdr-actions{display:flex;gap:8px}
+.btn-ghost{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:5px 13px;border-radius:5px;cursor:pointer;font-size:12px;font-family:var(--font);transition:background .15s}
+.btn-ghost:hover{background:rgba(255,255,255,.25)}
+
+/* MAIN */
+.main{max-width:780px;margin:0 auto;padding:20px 16px 60px}
+
+/* SETUP CARD */
+.setup-card{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);padding:18px 22px 20px;margin-bottom:14px;border:1px solid var(--gray-200)}
+.setup-section{margin-bottom:16px}
+.setup-section:last-child{margin-bottom:0}
+.setup-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--gray-400);margin-bottom:10px}
+.toggle-row{display:flex;align-items:center;gap:12px}
+.toggle-grp{display:flex;border:1.5px solid var(--gray-200);border-radius:6px;overflow:hidden}
+.toggle-grp button{padding:6px 18px;border:none;background:#fff;color:var(--gray-600);font-family:var(--font);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;border-right:1.5px solid var(--gray-200)}
+.toggle-grp button:last-child{border-right:none}
+.toggle-grp button.on{background:var(--blue);color:#fff}
+.ent-btns{display:flex;flex-wrap:wrap;gap:7px;margin-top:2px}
+.ent-btn{padding:5px 13px;border-radius:16px;border:2px solid var(--gray-200);background:#fff;color:var(--gray-600);font-family:var(--font);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}
+.ent-btn:hover{border-color:var(--blue);color:var(--blue)}
+.ent-btn.on{border-color:var(--blue);background:var(--blue-lt);color:var(--blue)}
+.ent-note{font-size:11.5px;color:var(--gray-400);margin-top:7px;font-style:italic}
+
+/* STEP CARDS */
+.step{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:10px;border:1.5px solid var(--gray-200);overflow:hidden;transition:border-color .2s}
+.step.done{border-color:var(--green)}
+.step-hdr{background:var(--navy);color:#fff;padding:13px 18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;transition:background .15s}
+.step-hdr:hover{background:var(--navy-mid)}
+.step.done .step-hdr{background:var(--green)}
+.step-hdr-l{display:flex;align-items:center;gap:11px}
+.step-num{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.step-name{font-size:14px;font-weight:600}
+.step-hdr-r{display:flex;align-items:center;gap:10px}
+.step-prog{font-size:11.5px;opacity:.8;background:rgba(255,255,255,.15);padding:2px 9px;border-radius:9px;font-variant-numeric:tabular-nums;min-width:48px;text-align:center}
+.step-arrow{font-size:14px;opacity:.7;transition:transform .2s;line-height:1}
+.step.closed .step-arrow{transform:rotate(-90deg)}
+.step-body{padding:0}
+.step.closed .step-body{display:none}
+
+/* GROUPS */
+.grp{padding:14px 20px;border-bottom:1px solid var(--gray-100)}
+.grp:last-child{border-bottom:none}
+.grp-lbl{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-400);margin-bottom:10px;display:flex;align-items:center;gap:5px}
+
+/* CHECK ITEMS */
+.ci{display:flex;align-items:flex-start;gap:9px;padding:5px 0}
+.ci+.ci{border-top:1px solid var(--gray-50)}
+.ci input[type=checkbox]{width:15px;height:15px;accent-color:var(--blue);flex-shrink:0;margin-top:3px;cursor:pointer}
+.ci label{cursor:pointer;line-height:1.5;flex:1;font-size:13.5px}
+.ci input:checked+label{color:var(--gray-400);text-decoration:line-through}
+
+/* SUB-ITEMS (non-checkbox descriptors) */
+.si{font-size:12.5px;color:var(--gray-600);padding:3px 0 3px 24px;line-height:1.4}
+
+/* SYSTEM TAGS */
+.sys{font-family:var(--mono);font-size:11.5px;background:var(--gray-100);color:var(--navy);padding:1px 5px;border-radius:3px;border:1px solid var(--gray-200);white-space:nowrap}
+
+/* WARN BOX */
+.warn{background:var(--amber-lt);border-left:3px solid var(--amber);padding:9px 13px;border-radius:0 5px 5px 0;font-size:12.5px;color:#7a3c00;margin:8px 0;display:flex;gap:7px;align-items:flex-start}
+
+/* REQUIRED BADGE */
+.req{display:inline-block;background:var(--red-lt);color:var(--red);font-size:10px;font-weight:700;padding:1px 7px;border-radius:9px;margin-left:6px;text-transform:uppercase;letter-spacing:.04em;vertical-align:middle}
+
+/* CONDITIONAL PANELS */
+.cond-panel{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:6px;padding:14px 16px;margin-top:10px}
+.cond-title{font-size:12.5px;font-weight:600;color:var(--gray-900);margin-bottom:10px}
+
+/* BINARY TOGGLE (Capital found / Funded) */
+.bin-row{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:6px;margin-bottom:10px;gap:12px}
+.bin-lbl{font-size:13px;font-weight:500;color:var(--gray-900);flex:1}
+.bin-btns{display:flex;border:1.5px solid var(--gray-200);border-radius:5px;overflow:hidden;flex-shrink:0}
+.bin-btns button{padding:4px 14px;border:none;background:#fff;font-family:var(--font);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;border-right:1.5px solid var(--gray-200);color:var(--gray-600)}
+.bin-btns button:last-child{border-right:none}
+.bin-btns button.sel-yes{background:var(--blue);color:#fff}
+.bin-btns button.sel-no{background:var(--gray-100);color:var(--gray-600)}
+
+/* OUTCOME BUTTONS */
+.outcome-btns{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.ob{padding:7px 15px;border-radius:6px;border:2px solid var(--gray-200);background:#fff;font-family:var(--font);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;color:var(--gray-600)}
+.ob:hover{border-color:var(--gray-400)}
+.ob.confirmed.on{border-color:var(--green);background:var(--green-lt);color:var(--green)}
+.ob.unclear.on{border-color:var(--amber);background:var(--amber-lt);color:var(--amber)}
+.ob.cleared.on{border-color:var(--blue);background:var(--blue-lt);color:var(--blue)}
+
+/* LOAN STATUS */
+.loan-row{display:flex;align-items:center;gap:8px;margin:8px 0}
+.loan-lbl{font-size:12.5px;font-weight:500;color:var(--gray-600);margin-right:4px}
+.ls-btn{padding:4px 13px;border-radius:5px;border:2px solid var(--gray-200);background:#fff;font-family:var(--font);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;color:var(--gray-600)}
+.ls-btn.on{border-color:var(--navy);background:var(--navy);color:#fff}
+
+/* FOLLOW-UP NOTE */
+.fu-note{display:none;background:#fff8e1;border:1px solid #f0c040;border-radius:6px;padding:9px 14px;font-size:12.5px;color:#7a5a00;margin:12px 20px 0}
+
+/* PRINT */
+@media print{
+  body{background:#fff}
+  .hdr{position:static;box-shadow:none}
+  .hdr-actions,.ent-btns,.toggle-grp,.outcome-btns,.loan-row,.bin-btns{display:none!important}
+  .step{box-shadow:none;border:1px solid #ccc;page-break-inside:avoid}
+  .step.closed .step-body{display:block!important}
+  .step-arrow{display:none}
+  .cond-panel{border:1px solid #ddd}
+  a{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div>
+    <div class="h1">ATO Case Review Checklist</div>
+    <div class="hdr-sub">Risk Operations · Account Takeover Review</div>
+  </div>
+  <div class="hdr-actions">
+    <button class="btn-ghost" onclick="resetChecks()">↺ Reset progress</button>
+    <button class="btn-ghost" onclick="window.print()">⎙ Print</button>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- ── CASE SETUP ─────────────────────────────────────── -->
+<div class="setup-card">
+
+  <div class="setup-section">
+    <div class="setup-title">Case type</div>
+    <div class="toggle-row">
+      <div class="toggle-grp">
+        <button id="btn-ft" onclick="setCaseType('ft')">First-touch</button>
+        <button id="btn-fu" onclick="setCaseType('fu')">Follow-up</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="setup-section">
+    <div class="setup-title">Active entitlements &nbsp;<span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px">(from IBOSS banner — select all that apply)</span></div>
+    <div class="ent-btns">
+      <button class="ent-btn" data-ent="pay" onclick="toggleEnt('pay')">Payments</button>
+      <button class="ent-btn" data-ent="bp" onclick="toggleEnt('bp')">Bill Pay</button>
+      <button class="ent-btn" data-ent="qbc" onclick="toggleEnt('qbc')">QB Checking</button>
+      <button class="ent-btn" data-ent="np" onclick="toggleEnt('np')">Network Payments</button>
+      <button class="ent-btn" data-ent="pr" onclick="toggleEnt('pr')">Payroll</button>
+    </div>
+    <div class="ent-note">Capital loans do not appear in the IBOSS banner — identify during review in Step 2.</div>
+  </div>
+
+</div>
+
+<!-- ── STEP 1 ──────────────────────────────────────────── -->
+<div class="step" id="step-1">
+  <div class="step-hdr" onclick="toggleStep('step-1')">
+    <div class="step-hdr-l">
+      <div class="step-num">1</div>
+      <span class="step-name">Starting Your Review</span>
+    </div>
+    <div class="step-hdr-r">
+      <span class="step-prog" id="p1">0 / 7</span>
+      <span class="step-arrow">▾</span>
+    </div>
+  </div>
+  <div class="step-body">
+    <div class="fu-note" id="fu1">↪ Follow-up case: verify all prior actions were completed before continuing.</div>
+
+    <div class="grp">
+      <div class="grp-lbl">Salesforce</div>
+      <div class="ci"><input type="checkbox" id="c1-1" onchange="save()"><label for="c1-1">Identify case origin — <strong>referral</strong> or <strong>policy-alerted</strong></label></div>
+      <div class="ci"><input type="checkbox" id="c1-2" onchange="save()"><label for="c1-2">Confirm proper case formatting
+        <div class="si"><span class="sys">MID:###</span> — no spaces before or after the colon</div>
+        <div class="si"><span class="sys">Rule Name:</span> ATO Support Review &nbsp;·&nbsp; <span class="sys">Offering:</span> Business Operations</div>
+        <div class="si"><span class="sys">Type:</span> Account Risk Monitoring &nbsp;·&nbsp; <span class="sys">Area:</span> Fraud Review &nbsp;·&nbsp; <span class="sys">SubArea:</span> Post Onboarding</div>
+      </label></div>
+      <div class="ci"><input type="checkbox" id="c1-3" onchange="save()"><label for="c1-3">Note whether referral mentions a <strong>Capital loan</strong> — flag for Step 2 if so</label></div>
+      <div class="ci"><input type="checkbox" id="c1-4" onchange="save()"><label for="c1-4">Copy the relevant note template into IBOSS</label></div>
+    </div>
+
+    <div class="grp">
+      <div class="grp-lbl">IBOSS</div>
+      <div class="ci"><input type="checkbox" id="c1-5" onchange="save()"><label for="c1-5">Check for related cases — assign any duplicates to yourself (maintains queue cleanliness and ensures credit for both)</label></div>
+      <div class="ci"><input type="checkbox" id="c1-6" onchange="save()"><label for="c1-6">Identify active entitlements from the IBOSS banner → update the entitlement selector above</label></div>
+      <div class="ci"><input type="checkbox" id="c1-7" onchange="save()"><label for="c1-7">Review Activity Feed for prior notes — confirm <strong>first-touch</strong> or <strong>follow-up</strong> → update case type selector above</label></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── STEP 2 ──────────────────────────────────────────── -->
+<div class="step" id="step-2">
+  <div class="step-hdr" onclick="toggleStep('step-2')">
+    <div class="step-hdr-l">
+      <div class="step-num">2</div>
+      <span class="step-name">Identifying ATO</span>
+    </div>
+    <div class="step-hdr-r">
+      <span class="step-prog" id="p2">0 / ?</span>
+      <span class="step-arrow">▾</span>
+    </div>
+  </div>
+  <div class="step-body">
+    <div class="fu-note" id="fu2">↪ Follow-up case: verify all prior actions were completed before continuing.</div>
+
+    <!-- Capital — always shown -->
+    <div class="grp">
+      <div class="grp-lbl">Capital Loan &nbsp;<span style="font-weight:400;font-size:10px;text-transform:none;letter-spacing:0">(always check — not visible in IBOSS banner)</span></div>
+
+      <div class="ci"><input type="checkbox" id="c2-cap-s" onchange="save()"><label for="c2-cap-s">Search account change history for <span class="sys">GPU</span> or <span class="sys">Loan</span></label></div>
+
+      <div class="bin-row" style="margin-top:6px">
+        <span class="bin-lbl">Capital loan found? (change history or referral)</span>
+        <div class="bin-btns">
+          <button id="cap-no" onclick="setCapital(false)">Not found</button>
+          <button id="cap-yes" onclick="setCapital(true)">Found</button>
+        </div>
+      </div>
+
+      <div id="cap-detail" style="display:none">
+        <div class="cond-panel">
+          <div class="cond-title">Capital loan review — COLR &amp; IBOSS</div>
+          <div class="ci"><input type="checkbox" id="c2-cap-1" onchange="save()"><label for="c2-cap-1">Locate loan in <span class="sys">COLR</span> using the Realm ID or Loan Application ID from Salesforce</label></div>
+          <div class="ci"><input type="checkbox" id="c2-cap-2" onchange="save()"><label for="c2-cap-2">Verify email on loan — compare to merchant's verified contact information; flag unexplained differences</label></div>
+          <div class="ci"><input type="checkbox" id="c2-cap-3" onchange="save()"><label for="c2-cap-3"><span class="sys">COLR → Zoot tab</span>: review IP address at time of application</label></div>
+          <div class="ci"><input type="checkbox" id="c2-cap-4" onchange="save()"><label for="c2-cap-4"><span class="sys">IBOSS → Merchant → IP Login</span>: cross-reference application IP against merchant's historical logins — focus on logins near the fraud date</label></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- General indicators — always shown -->
+    <div class="grp">
+      <div class="grp-lbl">General Account Review — IBOSS</div>
+      <div class="ci"><input type="checkbox" id="c2-g1" onchange="save()"><label for="c2-g1"><strong>Account Change History:</strong> Review for unauthorized changes — email, phone, bank account, or new product signups</label></div>
+      <div class="ci"><input type="checkbox" id="c2-g2" onchange="save()"><label for="c2-g2"><strong>IP Login:</strong> Flag new, international, or irregular login locations — check for VPN usage (indicated by red IP addresses)</label></div>
+      <div class="ci"><input type="checkbox" id="c2-g3" onchange="save()"><label for="c2-g3"><strong>Linked Accounts → DDAs tab:</strong> Check whether accounts linked by DDA were previously closed due to fraud or ATO</label></div>
+    </div>
+
+    <!-- Payments — conditional -->
+    <div class="grp" data-ent="pay" style="display:none">
+      <div class="grp-lbl">Payments</div>
+      <div class="ci"><input type="checkbox" id="c2-pay-1" onchange="save()"><label for="c2-pay-1"><strong>Bank accounts:</strong> Verify name is consistent with the account owner or business — run through <span class="sys">Sardine</span></label></div>
+      <div class="ci"><input type="checkbox" id="c2-pay-2" onchange="save()"><label for="c2-pay-2"><strong>Transactions:</strong> Check for abnormal processing volume, frequent declined authorizations, or unusual repeated transaction amounts (e.g., same amount on the same date)</label></div>
+    </div>
+
+    <!-- Bill Pay — conditional -->
+    <div class="grp" data-ent="bp" style="display:none">
+      <div class="grp-lbl">Bill Pay</div>
+      <div class="ci"><input type="checkbox" id="c2-bp-1" onchange="save()"><label for="c2-bp-1">Run bank and payee information through <span class="sys">Sardine</span> or <span class="sys">GIACT</span> — check for mismatches or high-risk indicators</label></div>
+      <div class="ci"><input type="checkbox" id="c2-bp-2" onchange="save()"><label for="c2-bp-2">Check for large amount discrepancies and risky payee banks (e.g., Pathward Bank, Choice Bank)</label></div>
+    </div>
+
+    <!-- Payroll — conditional -->
+    <div class="grp" data-ent="pr" style="display:none">
+      <div class="grp-lbl">Payroll</div>
+      <div class="ci"><input type="checkbox" id="c2-pr-1" onchange="save()"><label for="c2-pr-1">Check for addition of new employees or contractors</label></div>
+      <div class="ci"><input type="checkbox" id="c2-pr-2" onchange="save()"><label for="c2-pr-2">Check for changes to existing employee data — specifically direct deposit information</label></div>
+      <div class="ci"><input type="checkbox" id="c2-pr-3" onchange="save()"><label for="c2-pr-3">Check for abnormal payroll volume</label></div>
+    </div>
+
+    <!-- QB Checking — conditional -->
+    <div class="grp" data-ent="qbc" style="display:none">
+      <div class="grp-lbl">QB Checking</div>
+      <div class="ci"><input type="checkbox" id="c2-qbc-1" onchange="save()"><label for="c2-qbc-1">Check for use of instant deposits, often executed via debit cards</label></div>
+    </div>
+
+    <!-- Network Payments — conditional -->
+    <div class="grp" data-ent="np" style="display:none">
+      <div class="grp-lbl">Network Payments</div>
+      <div class="ci"><input type="checkbox" id="c2-np-1" onchange="save()"><label for="c2-np-1">Review account change history for unauthorized Network Payments activity</label></div>
+    </div>
+
+    <!-- ATO Determination -->
+    <div class="grp">
+      <div class="grp-lbl">ATO Determination</div>
+      <div style="font-size:12.5px;color:var(--gray-600);margin-bottom:6px">Select the outcome of your review to reveal next steps:</div>
+      <div class="outcome-btns">
+        <button class="ob confirmed" onclick="setOutcome('confirmed')">✓ &nbsp;ATO Confirmed</button>
+        <button class="ob unclear" onclick="setOutcome('unclear')">? &nbsp;Cannot confirm / cannot clear</button>
+        <button class="ob cleared" onclick="setOutcome('cleared')">✕ &nbsp;ATO Cleared</button>
+      </div>
+
+      <div id="out-unclear" style="display:none;margin-top:10px">
+        <div class="cond-panel">
+          <div class="cond-title">Contact customer to resolve</div>
+          <div class="ci"><input type="checkbox" id="c2-unc-1" onchange="save()"><label for="c2-unc-1">Attempt customer contact</label></div>
+          <div style="font-size:12.5px;color:var(--gray-600);padding:4px 0 2px 24px">If unable to reach customer:</div>
+          <div class="ci" style="padding-left:12px"><input type="checkbox" id="c2-unc-2" onchange="save()"><label for="c2-unc-2">Secure the account (continue to Step 3)</label></div>
+          <div class="ci" style="padding-left:12px"><input type="checkbox" id="c2-unc-3" onchange="save()"><label for="c2-unc-3">Send correspondence — case will route to follow-up queue when customer responds</label></div>
+        </div>
+      </div>
+
+      <div id="out-cleared" style="display:none;margin-top:10px">
+        <div class="cond-panel">
+          <div class="cond-title">Close the case</div>
+          <div class="ci"><input type="checkbox" id="c2-clr-1" onchange="save()"><label for="c2-clr-1">Add a note documenting why ATO was cleared</label></div>
+          <div class="ci"><input type="checkbox" id="c2-clr-2" onchange="save()"><label for="c2-clr-2">Close case &nbsp;<em style="color:var(--gray-600)">(if FRAPP is confirmed rather than ATO, close for FRAPP)</em></label></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── STEP 3 ──────────────────────────────────────────── -->
+<div class="step" id="step-3">
+  <div class="step-hdr" onclick="toggleStep('step-3')">
+    <div class="step-hdr-l">
+      <div class="step-num">3</div>
+      <span class="step-name">Secure Active Entitlements</span>
+    </div>
+    <div class="step-hdr-r">
+      <span class="step-prog" id="p3">0 / ?</span>
+      <span class="step-arrow">▾</span>
+    </div>
+  </div>
+  <div class="step-body">
+    <div class="fu-note" id="fu3">↪ Follow-up case: verify all prior actions were completed before continuing.</div>
+
+    <!-- Capital securing — conditional on found -->
+    <div id="s3-cap" style="display:none">
+      <div class="grp">
+        <div class="grp-lbl">Capital — COLR / IBOSS</div>
+        <div class="ci"><input type="checkbox" id="c3-cap-1" onchange="save()"><label for="c3-cap-1">In <span class="sys">COLR</span>: add note — <strong>"Confirmed Fraud: ATO"</strong> &nbsp;<span style="font-size:12px;color:var(--gray-600)">(required for policy partner tracking)</span></label></div>
+
+        <div class="loan-row">
+          <span class="loan-lbl">Loan status:</span>
+          <button class="ls-btn" id="ls-approved" onclick="setLoan('approved')">Approved</button>
+          <button class="ls-btn" id="ls-pending" onclick="setLoan('pending')">Pending</button>
+          <button class="ls-btn" id="ls-funded" onclick="setLoan('funded')">Funded</button>
+        </div>
+
+        <div id="loan-approved" style="display:none;margin-top:4px">
+          <div class="ci"><input type="checkbox" id="c3-cap-app1" onchange="save()"><label for="c3-cap-app1">Apply manual hold &nbsp;<em style="color:var(--gray-600)">(applies if GPU loan was added within the last 2 weeks)</em></label></div>
+          <div class="ci"><input type="checkbox" id="c3-cap-app2" onchange="save()"><label for="c3-cap-app2">Revoke loan — Adverse Action Reason: <span class="sys">FRAUD_ATO</span></label></div>
+        </div>
+
+        <div id="loan-pendfund" style="display:none;margin-top:4px">
+          <div class="ci"><input type="checkbox" id="c3-cap-pf1" onchange="save()"><label for="c3-cap-pf1">Create referral — use the referral type specific to the loan status (Pending and Funded referrals differ)</label></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QB Checking — conditional -->
+    <div class="grp" data-ent="qbc" style="display:none">
+      <div class="grp-lbl">QB Checking — IBOSS Actions</div>
+      <div class="ci"><input type="checkbox" id="c3-qbc-1" onchange="save()"><label for="c3-qbc-1"><span class="sys">Account Actions → Select Payments → Close</span></label></div>
+      <div class="ci"><input type="checkbox" id="c3-qbc-2" onchange="save()"><label for="c3-qbc-2">Close reason: <span class="sys">Account Takeover</span></label></div>
+    </div>
+
+    <!-- Payments — conditional -->
+    <div class="grp" data-ent="pay" style="display:none">
+      <div class="grp-lbl">Payments — IBOSS Actions</div>
+      <div class="ci"><input type="checkbox" id="c3-pay-1" onchange="save()"><label for="c3-pay-1"><span class="sys">Account Actions → Select Payments → Turn on NACHA</span> &nbsp;(one at a time)</label></div>
+      <div class="ci"><input type="checkbox" id="c3-pay-2" onchange="save()"><label for="c3-pay-2"><span class="sys">Turn on BAN</span> &nbsp;(one at a time)</label></div>
+    </div>
+
+    <!-- Bill Pay — conditional -->
+    <div class="grp" data-ent="bp" style="display:none">
+      <div class="grp-lbl">Bill Pay — IBOSS Actions</div>
+      <div class="ci"><input type="checkbox" id="c3-bp-1" onchange="save()"><label for="c3-bp-1"><span class="sys">Account Actions → Select Bill Pay</span></label></div>
+      <div class="si">Good merchant (most ATO cases): &nbsp;<span class="sys">SUSPEND</span> — reason: fraud</div>
+      <div class="si">Bad actor opened the account (FRAPP): &nbsp;<span class="sys">CLOSE</span> — reason: ATO</div>
+    </div>
+
+    <!-- Network Payments — conditional -->
+    <div class="grp" data-ent="np" style="display:none">
+      <div class="grp-lbl">Network Payments — IBOSS Actions</div>
+      <div class="ci"><input type="checkbox" id="c3-np-1" onchange="save()"><label for="c3-np-1"><span class="sys">Account Actions → Select Network Payments → Close</span></label></div>
+      <div class="ci"><input type="checkbox" id="c3-np-2" onchange="save()"><label for="c3-np-2">Close reason: <span class="sys">Account Takeover</span></label></div>
+    </div>
+
+    <!-- Payroll — conditional -->
+    <div class="grp" data-ent="pr" style="display:none">
+      <div class="grp-lbl">Payroll — IBOSS (Merchant / CS-Ops)</div>
+      <div class="warn"><span>⚠</span><span><strong>Order matters:</strong> If another hold is already active, <strong>remove it first</strong> — then apply Fraud Hold.</span></div>
+      <div class="ci"><input type="checkbox" id="c3-pr-1" onchange="save()"><label for="c3-pr-1">Under <span class="sys">Ops Team</span> — select <span class="sys">NSF Hold</span></label></div>
+      <div class="ci"><input type="checkbox" id="c3-pr-2" onchange="save()"><label for="c3-pr-2">Set <span class="sys">Fraud Hold</span></label></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── STEP 4 ──────────────────────────────────────────── -->
+<div class="step" id="step-4">
+  <div class="step-hdr" onclick="toggleStep('step-4')">
+    <div class="step-hdr-l">
+      <div class="step-num">4</div>
+      <span class="step-name">Remediate the Account</span>
+    </div>
+    <div class="step-hdr-r">
+      <span class="step-prog" id="p4">0 / ?</span>
+      <span class="step-arrow">▾</span>
+    </div>
+  </div>
+  <div class="step-body">
+    <div class="fu-note" id="fu4">↪ Follow-up case: verify all prior actions were completed before continuing.</div>
+
+    <div class="grp">
+      <div class="grp-lbl">Account Information</div>
+      <div class="ci"><input type="checkbox" id="c4-g1" onchange="save()"><label for="c4-g1">If applicable: correct contact information (email and phone) back to the customer's verified details</label></div>
+    </div>
+
+    <!-- Payments — conditional -->
+    <div class="grp" data-ent="pay" style="display:none">
+      <div class="grp-lbl">Payments — Tag &amp; Delete</div>
+      <div class="ci"><input type="checkbox" id="c4-pay-1" onchange="save()"><label for="c4-pay-1"><strong>Transactions:</strong> Tag all fraudulent transactions &nbsp;(<span class="sys">IBOSS → Transactions Search</span>)</label></div>
+      <div class="ci"><input type="checkbox" id="c4-pay-2" onchange="save()"><label for="c4-pay-2"><strong>Wallets:</strong> Identify wallet → tag in IBOSS → track in sheet → delete wallet in IBOSS</label></div>
+    </div>
+
+    <!-- Bill Pay — conditional -->
+    <div class="grp" data-ent="bp" style="display:none">
+      <div class="grp-lbl">Bill Pay</div>
+      <div class="ci"><input type="checkbox" id="c4-bp-1" onchange="save()"><label for="c4-bp-1">Cancel all fraudulent payments in IBOSS</label></div>
+    </div>
+
+    <!-- Payroll — conditional -->
+    <div class="grp" data-ent="pr" style="display:none">
+      <div class="grp-lbl">Payroll — Kount</div>
+      <div class="ci"><input type="checkbox" id="c4-pr-1" onchange="save()"><label for="c4-pr-1">Tag fraudulent devices as <span class="sys">D-ATO</span> and Decline</label></div>
+      <div class="ci"><input type="checkbox" id="c4-pr-2" onchange="save()"><label for="c4-pr-2">Tag fraudulent transactions as <span class="sys">D-ATO</span> and Decline</label></div>
+    </div>
+
+    <!-- Deactivate Auth ID — always -->
+    <div class="grp">
+      <div class="grp-lbl">Deactivate Auth ID — OII / IBOSS</div>
+      <div class="ci"><input type="checkbox" id="c4-d1" onchange="save()"><label for="c4-d1">Search User ID in <span class="sys">OII</span> to retrieve the Auth ID</label></div>
+      <div class="ci"><input type="checkbox" id="c4-d2" onchange="save()"><label for="c4-d2">In IBOSS: complete intake form → open generated case → deactivate the account</label></div>
+    </div>
+
+    <!-- Reconciliation — conditional toggle -->
+    <div class="grp">
+      <div class="grp-lbl">Reconciliation</div>
+      <div class="bin-row">
+        <span class="bin-lbl">Were transactions funded before the account was secured?</span>
+        <div class="bin-btns">
+          <button id="rec-no" onclick="setFunded(false)">No</button>
+          <button id="rec-yes" onclick="setFunded(true)">Yes</button>
+        </div>
+      </div>
+      <div id="recon-steps" style="display:none">
+        <div class="cond-panel">
+          <div class="cond-title">Reconciliation required</div>
+          <div class="ci"><input type="checkbox" id="c4-r1" onchange="save()"><label for="c4-r1">Download and complete the reconciliation sheet</label></div>
+          <div class="ci"><input type="checkbox" id="c4-r2" onchange="save()"><label for="c4-r2">Take action in IBOSS — write-off, offset, or refund as applicable</label></div>
+          <div class="ci"><input type="checkbox" id="c4-r3" onchange="save()"><label for="c4-r3">Upload completed reconciliation sheet to IBOSS</label></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Optional customer contact -->
+    <div class="grp">
+      <div class="grp-lbl">Customer Contact &nbsp;<span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px">(if needed)</span></div>
+      <div class="ci"><input type="checkbox" id="c4-cc1" onchange="save()"><label for="c4-cc1">Contact customer if unable to independently confirm bad wallets, bank accounts, or transactions</label></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── STEP 5 ──────────────────────────────────────────── -->
+<div class="step" id="step-5">
+  <div class="step-hdr" onclick="toggleStep('step-5')">
+    <div class="step-hdr-l">
+      <div class="step-num">5</div>
+      <span class="step-name">Restore the Account</span>
+    </div>
+    <div class="step-hdr-r">
+      <span class="step-prog" id="p5">0 / 6</span>
+      <span class="step-arrow">▾</span>
+    </div>
+  </div>
+  <div class="step-body">
+    <div class="fu-note" id="fu5">↪ Follow-up case: verify all prior actions were completed before continuing.</div>
+
+    <div class="grp">
+      <div class="grp-lbl">Account Restoration</div>
+      <div class="ci"><input type="checkbox" id="c5-1" onchange="save()"><label for="c5-1">Submit reactivation request via <span class="sys">HRI Reactivation Portal</span></label></div>
+      <div class="ci"><input type="checkbox" id="c5-2" onchange="save()"><label for="c5-2">Remove holds</label></div>
+    </div>
+
+    <div class="grp">
+      <div class="grp-lbl">Customer Contact <span class="req">Required</span></div>
+      <div class="ci"><input type="checkbox" id="c5-3" onchange="save()"><label for="c5-3">Inform customer of the ATO and the steps Intuit has taken</label></div>
+      <div class="ci"><input type="checkbox" id="c5-4" onchange="save()"><label for="c5-4">Provide Account Security Instructions — via correspondence and verbally</label></div>
+      <div class="ci"><input type="checkbox" id="c5-5" onchange="save()"><label for="c5-5">Walk customer through their steps to reactivate the account</label></div>
+    </div>
+
+    <div class="grp">
+      <div class="grp-lbl">Case Closure</div>
+      <div class="ci"><input type="checkbox" id="c5-6" onchange="save()"><label for="c5-6">Add confirmed ATO to the <strong>ATO Good Faith Tracker</strong> — required for all confirmed ATOs, including those with no losses</label></div>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+var S={caseType:'ft',ents:new Set(),cap:false,loan:null,outcome:null,funded:false,checks:{},collapsed:{}};
+
+function load(){
+  try{
+    var raw=localStorage.getItem('ato-cl');
+    if(raw){
+      var d=JSON.parse(raw);
+      S.caseType=d.caseType||'ft';
+      S.ents=new Set(d.ents||[]);
+      S.cap=!!d.cap;
+      S.loan=d.loan||null;
+      S.outcome=d.outcome||null;
+      S.funded=!!d.funded;
+      S.checks=d.checks||{};
+      S.collapsed=d.collapsed||{};
+    }
+  }catch(e){}
+  // Apply
+  setCaseType(S.caseType,1);
+  S.ents.forEach(function(e){toggleEnt(e,1);});
+  setCapital(S.cap,1);
+  if(S.loan)setLoan(S.loan,1);
+  if(S.outcome)setOutcome(S.outcome,1);
+  setFunded(S.funded,1);
+  Object.keys(S.checks).forEach(function(id){
+    var el=document.getElementById(id);
+    if(el)el.checked=S.checks[id];
+  });
+  Object.keys(S.collapsed).forEach(function(id){
+    if(S.collapsed[id]){
+      var st=document.getElementById(id);
+      if(st){st.classList.add('closed');var arr=st.querySelector('.step-arrow');if(arr)arr.textContent='▸';}
+    }
+  });
+  updateProg();
+}
+
+function save(){
+  document.querySelectorAll('input[type=checkbox]').forEach(function(cb){if(cb.id)S.checks[cb.id]=cb.checked;});
+  try{
+    localStorage.setItem('ato-cl',JSON.stringify({
+      caseType:S.caseType,ents:[...S.ents],cap:S.cap,loan:S.loan,
+      outcome:S.outcome,funded:S.funded,checks:S.checks,collapsed:S.collapsed
+    }));
+  }catch(e){}
+  updateProg();
+}
+
+function setCaseType(t,silent){
+  S.caseType=t;
+  document.getElementById('btn-ft').className=t==='ft'?'on':'';
+  document.getElementById('btn-fu').className=t==='fu'?'on':'';
+  document.querySelectorAll('[id^="fu"]').forEach(function(el){el.style.display=t==='fu'?'block':'none';});
+  if(!silent)save();
+}
+
+function toggleEnt(e,silent){
+  if(S.ents.has(e))S.ents.delete(e);else S.ents.add(e);
+  document.querySelector('[data-ent="'+e+'"].ent-btn').classList.toggle('on',S.ents.has(e));
+  document.querySelectorAll('[data-ent="'+e+'"]:not(.ent-btn)').forEach(function(el){
+    el.style.display=S.ents.has(e)?'':'none';
+  });
+  if(!silent)save();
+}
+
+function setCapital(v,silent){
+  S.cap=v;
+  document.getElementById('cap-yes').className=v?'sel-yes':'';
+  document.getElementById('cap-no').className=v?'':'sel-no';
+  document.getElementById('cap-detail').style.display=v?'':'none';
+  document.getElementById('s3-cap').style.display=v?'':'none';
+  if(!silent)save();
+}
+
+function setLoan(s,silent){
+  S.loan=s;
+  ['approved','pending','funded'].forEach(function(x){
+    document.getElementById('ls-'+x).classList.toggle('on',x===s);
+  });
+  document.getElementById('loan-approved').style.display=s==='approved'?'':'none';
+  document.getElementById('loan-pendfund').style.display=(s==='pending'||s==='funded')?'':'none';
+  if(!silent)save();
+}
+
+function setOutcome(o,silent){
+  S.outcome=o;
+  document.querySelectorAll('.ob').forEach(function(b){b.classList.remove('on');});
+  var btn=document.querySelector('.ob.'+o);
+  if(btn)btn.classList.add('on');
+  document.getElementById('out-unclear').style.display=o==='unclear'?'':'none';
+  document.getElementById('out-cleared').style.display=o==='cleared'?'':'none';
+  if(!silent)save();
+}
+
+function setFunded(v,silent){
+  S.funded=v;
+  document.getElementById('rec-yes').className=v?'sel-yes':'';
+  document.getElementById('rec-no').className=v?'':'sel-no';
+  document.getElementById('recon-steps').style.display=v?'':'none';
+  if(!silent)save();
+}
+
+function toggleStep(id){
+  var st=document.getElementById(id);
+  var closing=!st.classList.contains('closed');
+  st.classList.toggle('closed',closing);
+  var arr=st.querySelector('.step-arrow');
+  if(arr)arr.textContent=closing?'▸':'▾';
+  S.collapsed[id]=closing;
+  save();
+}
+
+function visible(el){
+  var n=el;
+  while(n&&n!==document.body){
+    if(n.style&&n.style.display==='none')return false;
+    n=n.parentNode;
+  }
+  return true;
+}
+
+function updateProg(){
+  ['1','2','3','4','5'].forEach(function(n){
+    var st=document.getElementById('step-'+n);
+    if(!st)return;
+    var all=st.querySelectorAll('input[type=checkbox]');
+    var vis=[].filter.call(all,function(cb){return visible(cb);});
+    var chk=vis.filter(function(cb){return cb.checked;});
+    var prog=document.getElementById('p'+n);
+    if(prog)prog.textContent=chk.length+' / '+vis.length;
+    if(vis.length>0&&chk.length===vis.length)st.classList.add('done');
+    else st.classList.remove('done');
+  });
+}
+
+function resetChecks(){
+  if(!confirm('Clear all checkbox progress?\n\nYour entitlement selections and case type will be preserved.'))return;
+  document.querySelectorAll('input[type=checkbox]').forEach(function(cb){cb.checked=false;if(cb.id)S.checks[cb.id]=false;});
+  save();
+}
+
+document.addEventListener('DOMContentLoaded',load);
+window.addEventListener('load',function(){if(document.readyState==='complete')load();});
+</script>
+</body>
+</html>
