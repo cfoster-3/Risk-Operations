@@ -194,9 +194,10 @@ body{font-family:var(--font);font-size:14px;color:var(--gray-900);background:var
         <div class="si"><span class="sys">MID:###</span> — no spaces before or after the colon</div>
         <div class="si"><span class="sys">Rule Name:</span> ATO Support Review &nbsp;·&nbsp; <span class="sys">Offering:</span> Business Operations</div>
         <div class="si"><span class="sys">Type:</span> Account Risk Monitoring &nbsp;·&nbsp; <span class="sys">Area:</span> Fraud Review &nbsp;·&nbsp; <span class="sys">SubArea:</span> Post Onboarding</div>
+        <div class="si" style="font-style:italic;color:var(--amber)">Applies to referral cases only — not required for policy-alerted cases.</div>
       </label></div>
       <div class="ci"><input type="checkbox" id="c1-3" onchange="save()"><label for="c1-3">Note whether referral mentions a <strong>Capital loan</strong> — flag for Step 2 if so</label></div>
-      <div class="ci"><input type="checkbox" id="c1-4" onchange="save()"><label for="c1-4">Copy the relevant note template into IBOSS</label></div>
+      <div class="ci"><input type="checkbox" id="c1-4" onchange="save()"><label for="c1-4">Copy the relevant <a href="https://docs.google.com/document/d/1_fA5vu1C5qTAIQjwESw6hB-AR5AMkgTYp7kfD4N_M0E/edit?tab=t.0#heading=h.jj5vvifugmxg" target="_blank">note template</a> into IBOSS</label></div>
     </div>
 
     <div class="grp">
@@ -225,7 +226,7 @@ body{font-family:var(--font);font-size:14px;color:var(--gray-900);background:var
 
     <!-- Capital — always shown -->
     <div class="grp">
-      <div class="grp-lbl">Capital Loan &nbsp;<span style="font-weight:400;font-size:10px;text-transform:none;letter-spacing:0">(always check — not visible in IBOSS banner)</span></div>
+      <div class="grp-lbl">Capital Loan &nbsp;<span style="font-weight:400;font-size:10px;text-transform:none;letter-spacing:0">(always check — not always visible in IBOSS banner)</span></div>
 
       <div class="ci"><input type="checkbox" id="c2-cap-s" onchange="save()"><label for="c2-cap-s">Search account change history for <span class="sys">GPU</span> or <span class="sys">Loan</span></label></div>
 
@@ -242,8 +243,8 @@ body{font-family:var(--font);font-size:14px;color:var(--gray-900);background:var
           <div class="cond-title">Capital loan review — COLR &amp; IBOSS</div>
           <div class="ci"><input type="checkbox" id="c2-cap-1" onchange="save()"><label for="c2-cap-1">Locate loan in <span class="sys">COLR</span> using the Realm ID or Loan Application ID from Salesforce</label></div>
           <div class="ci"><input type="checkbox" id="c2-cap-2" onchange="save()"><label for="c2-cap-2">Verify email on loan — compare to merchant's verified contact information; flag unexplained differences</label></div>
-          <div class="ci"><input type="checkbox" id="c2-cap-3" onchange="save()"><label for="c2-cap-3"><span class="sys">COLR → Zoot tab</span>: review IP address at time of application</label></div>
-          <div class="ci"><input type="checkbox" id="c2-cap-4" onchange="save()"><label for="c2-cap-4"><span class="sys">IBOSS → Merchant → IP Login</span>: cross-reference application IP against merchant's historical logins — focus on logins near the fraud date</label></div>
+          <div class="ci"><input type="checkbox" id="c2-cap-2a" onchange="save()"><label for="c2-cap-2a">Review the bank account on the loan application — if it differs from the account on file, verify in <a href="https://dashboard.sardine.ai/customers" target="_blank">Sardine</a></label></div>
+          <div class="ci"><input type="checkbox" id="c2-cap-3" onchange="save()"><label for="c2-cap-3"><span class="sys">COLR → IBOSS Capital UW case → Zoot tab</span>: cross-reference IP address at time of application against merchant's historical logins</label></div>
         </div>
       </div>
     </div>
@@ -259,23 +260,22 @@ body{font-family:var(--font);font-size:14px;color:var(--gray-900);background:var
     <!-- Payments — conditional -->
     <div class="grp" data-ent="pay" style="display:none">
       <div class="grp-lbl">Payments</div>
-      <div class="ci"><input type="checkbox" id="c2-pay-1" onchange="save()"><label for="c2-pay-1"><strong>Bank accounts:</strong> Verify name is consistent with the account owner or business — run through <span class="sys">Sardine</span></label></div>
+      <div class="ci"><input type="checkbox" id="c2-pay-1" onchange="save()"><label for="c2-pay-1"><strong>Bank accounts:</strong> Run the good and bad banks through <a href="https://dashboard.sardine.ai/customers" target="_blank">Sardine</a> to verify the account is valid and matches the business or owner name</label></div>
       <div class="ci"><input type="checkbox" id="c2-pay-2" onchange="save()"><label for="c2-pay-2"><strong>Transactions:</strong> Check for abnormal processing volume, frequent declined authorizations, or unusual repeated transaction amounts (e.g., same amount on the same date)</label></div>
     </div>
 
     <!-- Bill Pay — conditional -->
     <div class="grp" data-ent="bp" style="display:none">
       <div class="grp-lbl">Bill Pay</div>
-      <div class="ci"><input type="checkbox" id="c2-bp-1" onchange="save()"><label for="c2-bp-1">Run bank and payee information through <span class="sys">Sardine</span> or <span class="sys">GIACT</span> — check for mismatches or high-risk indicators</label></div>
-      <div class="ci"><input type="checkbox" id="c2-bp-2" onchange="save()"><label for="c2-bp-2">Check for large amount discrepancies and risky payee banks (e.g., Pathward Bank, Choice Bank)</label></div>
+      <div class="ci"><input type="checkbox" id="c2-bp-1" onchange="save()"><label for="c2-bp-1"><strong>Bank Accounts:</strong> Run bank and payee information through <a href="https://dashboard.sardine.ai/customers" target="_blank">Sardine</a> — check for mismatches or high-risk indicators</label></div>
+      <div class="ci"><input type="checkbox" id="c2-bp-2" onchange="save()"><label for="c2-bp-2"><strong>Transactions:</strong> Check for large amount discrepancies and risky payee banks (e.g., Pathward Bank, Choice Bank)</label></div>
     </div>
 
     <!-- Payroll — conditional -->
     <div class="grp" data-ent="pr" style="display:none">
       <div class="grp-lbl">Payroll</div>
-      <div class="ci"><input type="checkbox" id="c2-pr-1" onchange="save()"><label for="c2-pr-1">Check for addition of new employees or contractors</label></div>
-      <div class="ci"><input type="checkbox" id="c2-pr-2" onchange="save()"><label for="c2-pr-2">Check for changes to existing employee data — specifically direct deposit information</label></div>
-      <div class="ci"><input type="checkbox" id="c2-pr-3" onchange="save()"><label for="c2-pr-3">Check for abnormal payroll volume</label></div>
+      <div class="ci"><input type="checkbox" id="c2-pr-1" onchange="save()"><label for="c2-pr-1"><strong>CS-Ops Activity:</strong> Check for addition of new employees or contractors, or changes to existing employee data (specifically direct deposit information)</label></div>
+      <div class="ci"><input type="checkbox" id="c2-pr-3" onchange="save()"><label for="c2-pr-3"><strong>Monetary Balance:</strong> Check for abnormal payroll volume</label></div>
     </div>
 
     <!-- QB Checking — conditional -->
@@ -313,7 +313,8 @@ body{font-family:var(--font);font-size:14px;color:var(--gray-900);background:var
       <div id="out-cleared" style="display:none;margin-top:10px">
         <div class="cond-panel">
           <div class="cond-title">Close the case</div>
-          <div class="ci"><input type="checkbox" id="c2-clr-1" onchange="save()"><label for="c2-clr-1">Add a note documenting why ATO was cleared</label></div>
+          <div class="ci"><input type="checkbox" id="c2-clr-1" onchange="save()"><label for="c2-clr-1">Add a note documenting why ATO was cleared<div class="si" style="font-style:italic;color:var(--gray-600)">If a pending Capital loan is present, also add a note in the Capital UW case confirming ATO has been cleared.</div></label></div>
+          <div class="ci"><input type="checkbox" id="c2-clr-1a" onchange="save()"><label for="c2-clr-1a">Remove relevant holds, if placed for ATO</label></div>
           <div class="ci"><input type="checkbox" id="c2-clr-2" onchange="save()"><label for="c2-clr-2">Close case &nbsp;<em style="color:var(--gray-600)">(if FRAPP is confirmed rather than ATO, close for FRAPP)</em></label></div>
         </div>
       </div>
@@ -355,7 +356,7 @@ body{font-family:var(--font);font-size:14px;color:var(--gray-900);background:var
         </div>
 
         <div id="loan-pendfund" style="display:none;margin-top:4px">
-          <div class="ci"><input type="checkbox" id="c3-cap-pf1" onchange="save()"><label for="c3-cap-pf1">Create referral — use the referral type specific to the loan status (Pending and Funded referrals differ)</label></div>
+          <div class="ci"><input type="checkbox" id="c3-cap-pf1" onchange="save()"><label for="c3-cap-pf1">Create referral — use the referral type specific to the loan status (Pending and Funded referrals differ — see job aid)</label></div>
         </div>
       </div>
     </div>
@@ -370,8 +371,8 @@ body{font-family:var(--font);font-size:14px;color:var(--gray-900);background:var
     <!-- Payments — conditional -->
     <div class="grp" data-ent="pay" style="display:none">
       <div class="grp-lbl">Payments — IBOSS Actions</div>
-      <div class="ci"><input type="checkbox" id="c3-pay-1" onchange="save()"><label for="c3-pay-1"><span class="sys">Account Actions → Select Payments → Turn on NACHA</span> &nbsp;(one at a time)</label></div>
-      <div class="ci"><input type="checkbox" id="c3-pay-2" onchange="save()"><label for="c3-pay-2"><span class="sys">Turn on BAN</span> &nbsp;(one at a time)</label></div>
+      <div class="ci"><input type="checkbox" id="c3-pay-1" onchange="save()"><label for="c3-pay-1"><span class="sys">Actions → Money Movement → Turn on NACHA → Save</span> &nbsp;(one at a time)</label></div>
+      <div class="ci"><input type="checkbox" id="c3-pay-2" onchange="save()"><label for="c3-pay-2"><span class="sys">Turn on BAN → Save</span> &nbsp;(one at a time)</label></div>
     </div>
 
     <!-- Bill Pay — conditional -->
@@ -424,27 +425,34 @@ body{font-family:var(--font);font-size:14px;color:var(--gray-900);background:var
     <div class="grp" data-ent="pay" style="display:none">
       <div class="grp-lbl">Payments — Tag &amp; Delete</div>
       <div class="ci"><input type="checkbox" id="c4-pay-1" onchange="save()"><label for="c4-pay-1"><strong>Transactions:</strong> Tag all fraudulent transactions &nbsp;(<span class="sys">IBOSS → Transactions Search</span>)</label></div>
-      <div class="ci"><input type="checkbox" id="c4-pay-2" onchange="save()"><label for="c4-pay-2"><strong>Wallets:</strong> Identify wallet → tag in IBOSS → track in sheet → delete wallet in IBOSS</label></div>
+      <div class="ci"><input type="checkbox" id="c4-pay-2" onchange="save()"><label for="c4-pay-2"><strong>Wallets:</strong> Identify wallet → tag in IBOSS → track in <a href="https://docs.google.com/spreadsheets/d/1Ypv_s6SpkAKwKiOwEbpt2OVILcH_mxaJLnk_IENm8N0/edit?gid=2118000321#gid=2118000321" target="_blank">sheet</a> → delete wallet in IBOSS</label></div>
     </div>
 
     <!-- Bill Pay — conditional -->
     <div class="grp" data-ent="bp" style="display:none">
-      <div class="grp-lbl">Bill Pay</div>
-      <div class="ci"><input type="checkbox" id="c4-bp-1" onchange="save()"><label for="c4-bp-1">Cancel all fraudulent payments in IBOSS</label></div>
+      <div class="grp-lbl">Bill Pay — IBOSS Transactions</div>
+      <div class="ci"><input type="checkbox" id="c4-bp-1" onchange="save()"><label for="c4-bp-1">Tag the payee information on all fraudulent transactions — if available, cancel fraudulent payments in IBOSS</label></div>
     </div>
 
     <!-- Payroll — conditional -->
+    <!-- QB Checking Step 4 placeholder —- conditional -->
+    <div class="grp" data-ent="qbc" style="display:none">
+      <div class="grp-lbl">QB Checking</div>
+      <div class="warn"><span>⏳</span><span><strong>Steps pending:</strong> QB Checking remediation steps are under review. Refer to the job aid until this section is updated.</span></div>
+    </div>
+
     <div class="grp" data-ent="pr" style="display:none">
       <div class="grp-lbl">Payroll — Kount</div>
       <div class="ci"><input type="checkbox" id="c4-pr-1" onchange="save()"><label for="c4-pr-1">Tag fraudulent devices as <span class="sys">D-ATO</span> and Decline</label></div>
+      <div class="ci"><input type="checkbox" id="c4-pr-1a" onchange="save()"><label for="c4-pr-1a">Deactivate fraudulent device IDs via the VIP list</label></div>
       <div class="ci"><input type="checkbox" id="c4-pr-2" onchange="save()"><label for="c4-pr-2">Tag fraudulent transactions as <span class="sys">D-ATO</span> and Decline</label></div>
     </div>
 
     <!-- Deactivate Auth ID — always -->
     <div class="grp">
       <div class="grp-lbl">Deactivate Auth ID — OII / IBOSS</div>
-      <div class="ci"><input type="checkbox" id="c4-d1" onchange="save()"><label for="c4-d1">Search User ID in <span class="sys">OII</span> to retrieve the Auth ID</label></div>
-      <div class="ci"><input type="checkbox" id="c4-d2" onchange="save()"><label for="c4-d2">In IBOSS: complete intake form → open generated case → deactivate the account</label></div>
+      <div class="ci"><input type="checkbox" id="c4-d1" onchange="save()"><label for="c4-d1">Search User IDs (for both the merchant and fraudster, if available) in <a href="https://oii-csr.app.intuit.com/csr/app" target="_blank">OII</a> to retrieve the Auth IDs</label></div>
+      <div class="ci"><input type="checkbox" id="c4-d2" onchange="save()"><label for="c4-d2"><span class="sys">IBOSS → Actions → Create Referral Case</span> — see job aid for full steps</label></div>
     </div>
 
     <!-- Reconciliation — conditional toggle -->
@@ -460,7 +468,7 @@ body{font-family:var(--font);font-size:14px;color:var(--gray-900);background:var
       <div id="recon-steps" style="display:none">
         <div class="cond-panel">
           <div class="cond-title">Reconciliation required</div>
-          <div class="ci"><input type="checkbox" id="c4-r1" onchange="save()"><label for="c4-r1">Download and complete the reconciliation sheet</label></div>
+          <div class="ci"><input type="checkbox" id="c4-r1" onchange="save()"><label for="c4-r1">Download and complete the <a href="https://drive.google.com/drive/folders/1o40vo-74p02i15alS5Q8m_11IgU0FuNp" target="_blank">reconciliation sheet</a> <span style="font-size:11.5px;color:var(--gray-600);font-style:italic">(applies to Payments and QB Checking — confirm with process for Bill Pay and Payroll)</span></label></div>
           <div class="ci"><input type="checkbox" id="c4-r2" onchange="save()"><label for="c4-r2">Take action in IBOSS — write-off, offset, or refund as applicable</label></div>
           <div class="ci"><input type="checkbox" id="c4-r3" onchange="save()"><label for="c4-r3">Upload completed reconciliation sheet to IBOSS</label></div>
         </div>
@@ -493,7 +501,7 @@ body{font-family:var(--font);font-size:14px;color:var(--gray-900);background:var
 
     <div class="grp">
       <div class="grp-lbl">Account Restoration</div>
-      <div class="ci"><input type="checkbox" id="c5-1" onchange="save()"><label for="c5-1">Submit reactivation request via <span class="sys">HRI Reactivation Portal</span></label></div>
+      <div class="ci"><input type="checkbox" id="c5-1" onchange="save()"><label for="c5-1">Submit reactivation request via <a href="https://hri-portal.app.intuit.com/hri-investigator-portal/agentview" target="_blank">HRI Reactivation Portal</a> — reactivate the merchant's user ID only</label></div>
       <div class="ci"><input type="checkbox" id="c5-2" onchange="save()"><label for="c5-2">Remove holds</label></div>
     </div>
 
@@ -506,7 +514,8 @@ body{font-family:var(--font);font-size:14px;color:var(--gray-900);background:var
 
     <div class="grp">
       <div class="grp-lbl">Case Closure</div>
-      <div class="ci"><input type="checkbox" id="c5-6" onchange="save()"><label for="c5-6">Add confirmed ATO to the <strong>ATO Good Faith Tracker</strong> — required for all confirmed ATOs, including those with no losses</label></div>
+      <div class="ci"><input type="checkbox" id="c5-clr-1" onchange="save()"><label for="c5-clr-1">Tag ATO confirmed — <span class="sys">IBOSS → Actions → ATO Confirmed</span>. Comment: <strong>Confirmed Fraud: ATO</strong></label></div>
+      <div class="ci"><input type="checkbox" id="c5-6" onchange="save()"><label for="c5-6">Add confirmed ATO to the <a href="https://docs.google.com/spreadsheets/d/12jyWeCp08-0Af_ngLjg_i32KLPU90m0yy1QB5Fqz-i8/edit?gid=0#gid=0" target="_blank"><strong>ATO Good Faith Tracker</strong></a> — required for all confirmed ATOs, including those with no losses</label></div>
     </div>
 
   </div>
